@@ -1,0 +1,23 @@
+on:
+  push:
+  pull_request_target:
+jobs:
+  move-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: thatdot/copybara-action@main
+        with:
+          ssh_key: ${{ secrets.SSH_KEY }}
+          access_token: ${{ secrets.GH_TOKEN }}
+          sot_repo: maman/cp-sot
+          destination_repo: maman/cp-target
+          push_include: "public/** .github/workflows/move-repo.yml"
+          pr_replace: |
+            npm run dev||bob svc:develop x||README.md
+          pr_move: |
+            ||public
+            public/.github||.github
